@@ -1,15 +1,15 @@
 package com.example.newactivityresult.future
 
 import android.os.Bundle
-import androidx.activity.invoke
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newactivityresult.R
 import kotlinx.android.synthetic.main.activity_camera.*
 
 class CameraActivity : AppCompatActivity() {
 
-    private val camera = prepareCall(ActivityResultContracts.TakePicture()) { bitmap ->
+    private val camera = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
         picture.setImageBitmap(bitmap)
     }
 
@@ -18,7 +18,7 @@ class CameraActivity : AppCompatActivity() {
         setContentView(R.layout.activity_camera)
 
         cameraButton.setOnClickListener {
-            camera()
+            camera.launch()
         }
     }
 }

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.invoke
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.newactivityresult.R
@@ -16,7 +15,7 @@ import splitties.toast.toast
 class CallActivity : AppCompatActivity() {
 
     private val callPermission =
-        prepareCall(ActivityResultContracts.RequestPermission()) { success ->
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { success ->
             when {
                 success -> {
                     call()
@@ -40,7 +39,7 @@ class CallActivity : AppCompatActivity() {
             if (isGranted(Manifest.permission.CALL_PHONE)) {
                 call()
             } else {
-                callPermission(Manifest.permission.CALL_PHONE)
+                callPermission.launch(Manifest.permission.CALL_PHONE)
             }
         }
     }

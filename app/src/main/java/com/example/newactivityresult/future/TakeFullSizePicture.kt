@@ -11,18 +11,16 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TakeFullSizePicture(
-    private val context: Context
-) : ActivityResultContract<Void, Uri?>() {
+object TakeFullSizePicture : ActivityResultContract<Void, Uri?>() {
 
     private var photoURI: Uri? = null
 
-    override fun createIntent(input: Void?): Intent =
+    override fun createIntent(context: Context, input: Void?): Intent =
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
             takePictureIntent.resolveActivity(context.packageManager)?.also {
                 // Continue only if the File was successfully created
-                val imageFile = createImageFile()
+                val imageFile = createImageFile(context)
                 photoURI = FileProvider.getUriForFile(
                     context,
                     "com.example.android.fileprovider",
@@ -34,7 +32,7 @@ class TakeFullSizePicture(
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? = photoURI
 
-    private fun createImageFile(): File {
+    private fun createImageFile(context: Context): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
